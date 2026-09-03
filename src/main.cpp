@@ -21,7 +21,7 @@ const float GAP_HEIGHT = 200.0f;
 // Game physics
 const float INITIAL_BIRD_VELOCITY_Y = 0.0f;
 const float GRAVITY = 0.3f;
-const float JUMP_SPEED = -5.0f; // (set velocity of bird in the Y direction upon jump)
+const float JUMP_SPEED = -5.0f;  // (set velocity of bird in the Y direction upon jump)
 const float TUBE_SPEED = 3.0f;
 
 // TODO: (Q1)
@@ -42,26 +42,23 @@ struct TubePair {
     sf::RectangleShape bottomTube;
     float x;
 
-    TubePair(float xPos, float gapY, float gapHeight)
-        : x(xPos)
-    {
+    TubePair(float xPos, float gapY, float gapHeight) : x(xPos) {
         // Top tube
-        topTube.setPosition({ xPos, 0 });
-        topTube.setSize({ TUBE_WIDTH, gapY });
+        topTube.setPosition({xPos, 0});
+        topTube.setSize({TUBE_WIDTH, gapY});
         topTube.setFillColor(sf::Color::Green);
 
         // Bottom tube
         float bottomTubeHeight = WINDOW_HEIGHT - (gapY + gapHeight);
-        bottomTube.setPosition({ xPos, gapY + gapHeight });
-        bottomTube.setSize({ TUBE_WIDTH, bottomTubeHeight });
+        bottomTube.setPosition({xPos, gapY + gapHeight});
+        bottomTube.setSize({TUBE_WIDTH, bottomTubeHeight});
         bottomTube.setFillColor(sf::Color::Green);
     }
 
-    void update(float speed)
-    {
+    void update(float speed) {
         x -= speed;
-        topTube.setPosition({ x, topTube.getPosition().y });
-        bottomTube.setPosition({ x, bottomTube.getPosition().y });
+        topTube.setPosition({x, topTube.getPosition().y});
+        bottomTube.setPosition({x, bottomTube.getPosition().y});
     }
 
     bool isOffScreen() const { return x + topTube.getSize().x < 0; }
@@ -70,9 +67,7 @@ struct TubePair {
 bool isTubeOffScreen(const TubePair& tube) { return tube.isOffScreen(); }
 
 struct BirdState {
-    BirdState()
-        : velocityY { INITIAL_BIRD_VELOCITY_Y }
-    {
+    BirdState() : velocityY{INITIAL_BIRD_VELOCITY_Y} {
         // ====== ====== ======
         // TODO: (Q1)
         //  - initialize the bird's shape (see below) to have
@@ -89,25 +84,20 @@ struct BirdState {
 };
 
 struct GameState {
-    GameState()
-        : rng(0)
-        , gapDistribution(100.0f, 500.0f)
-    {
+    GameState() : rng(0), gapDistribution(100.0f, 500.0f) {
         // Note: bird is automatically initialized by BirdState's default ctor,
         // which you implemented above.
         generateInitialTubes();
     }
 
-    void updateState()
-    {
+    void updateState() {
         applyPhysicsToBird();
         updateTubes();
         checkCollisions();
     }
 
 private:
-    void generateInitialTubes()
-    {
+    void generateInitialTubes() {
         // Generate tubes starting from the right edge
         for (float x = WINDOW_WIDTH + 100.f; x < WINDOW_WIDTH + 1200.f; x += TUBE_SPACING) {
             float gapY = gapDistribution(rng);
@@ -115,14 +105,12 @@ private:
         }
     }
 
-    void resetTubes()
-    {
+    void resetTubes() {
         tubes.clear();
         generateInitialTubes();
     }
 
-    void applyPhysicsToBird()
-    {
+    void applyPhysicsToBird() {
         // Apply gravity to bird
         bird.velocityY += GRAVITY;
 
@@ -142,8 +130,7 @@ private:
         // ====== ====== ======
     }
 
-    void updateTubes()
-    {
+    void updateTubes() {
         // Update tube positions
         for (auto& tube : tubes) {
             tube.update(TUBE_SPEED);
@@ -162,8 +149,7 @@ private:
         }
     }
 
-    void checkCollisions()
-    {
+    void checkCollisions() {
         // ====== ====== ======
         // TODO: (Q4)
         //  Check for bird-tube collision using SFML Rect methods: getGlobalBounds() and
@@ -189,9 +175,8 @@ public:
     std::uniform_real_distribution<float> gapDistribution;
 };
 
-void handleInput(
-    sf::Window& window, GameState& gameState, const ResourceManager& resources, bool& shouldQuit)
-{
+void handleInput(sf::Window& window, GameState& gameState, const ResourceManager& resources,
+                 bool& shouldQuit) {
     while (const std::optional<sf::Event> event = window.pollEvent()) {
         if (event->is<sf::Event::Closed>()) {
             window.close();
@@ -205,8 +190,7 @@ void handleInput(
     }
 }
 
-void render(sf::RenderWindow& window, const GameState& gameState)
-{
+void render(sf::RenderWindow& window, const GameState& gameState) {
     // Clear with blue background (sky)
     window.clear(sf::Color::Blue);
     // Draw tubes
@@ -220,18 +204,17 @@ void render(sf::RenderWindow& window, const GameState& gameState)
     window.display();
 }
 
-int main()
-{
+int main() {
     sf::RenderWindow window;
     ResourceManager resources;
-    GameState gameState; // game state initialization happens with ctor call
+    GameState gameState;  // game state initialization happens with ctor call
 
-    // Prevent key repeats.
-    window.setKeyRepeatEnabled(false);
     try {
         // Initialize window
-        window.create(sf::VideoMode({ WINDOW_WIDTH, WINDOW_HEIGHT }), "Flappy Bird");
+        window.create(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), "Flappy Bird");
         window.setFramerateLimit(FPS_LIMIT);
+        // Prevent key repeats.
+        window.setKeyRepeatEnabled(false);
 
         // ====== ====== ======
         // TODO: (Q2)
@@ -254,8 +237,9 @@ int main()
         // Main game loop
         while (window.isOpen()) {
             handleInput(window, gameState, resources, shouldQuit);
-            if (shouldQuit)
+            if (shouldQuit) {
                 break;
+            }
             gameState.updateState();
             render(window, gameState);
         }
