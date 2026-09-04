@@ -29,3 +29,5 @@ target_link_libraries(flappy PRIVATE
     SFML::System
     SFML::Audio
 )
+
+configure_file(${CMAKE_SOURCE_DIR}/assets/jump.wav ${CMAKE_BINARY_DIR}/assets/jump.wav COPYONLY)
