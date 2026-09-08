@@ -26,7 +26,6 @@ add_executable(flappy src/main.cpp)
 target_link_libraries(flappy PRIVATE
     SFML::Graphics
     SFML::Window
-    SFML::System
     SFML::Audio
 )
 
